@@ -1,7 +1,6 @@
 import ApiPixabay from './js/apiService';
 import imageMarkup from './templates/imagemarkup.hbs';
 import styles from './css/styles.css';
-// const debounce = require('lodash.debounce');
 
 const refs = {
     input: document.querySelector('#search-form'),
@@ -10,36 +9,27 @@ const refs = {
     searchBtn: document.querySelector('.search-btn')
 }
 
-const api = new ApiPixabay();
-// refs.input.addEventListener('input', debounce(onInput, 500));
+const apiPix = new ApiPixabay();
+
 refs.input.addEventListener('submit', onInput);
 refs.loadMoreBtn.addEventListener('click', onClickLoadMore);
-
 
 function onInput(evt) {
     evt.preventDefault();
     const searchQuery = evt.currentTarget.elements.query.value.trim()
-    // searchQuery = evt.target.value.toLowerCase().trim();
-    api.q = searchQuery;
+    apiPix.q = searchQuery;
     if (searchQuery === '') {
         return
     }
     refs.searchBtn.disabled = true;
     refs.gallery.innerHTML = '';
-    api.resetPage();
+    apiPix.resetPage();
     getImages();
     smoothScrolling();
-    // fetchImages(searchQuery)
-    //     .then((data) => {
-    //         renderMarkup(data)
-    //         refs.searchBtn.disabled = false
-    //         refs.loadMoreBtn.classList.remove('is-hidden');
-    //     })
-
 }
 
 function getImages() {
-    api.fetchImages().then(data => {
+    apiPix.fetchImages().then(data => {
         renderMarkup(data);
         refs.searchBtn.disabled = false;
         refs.loadMoreBtn.classList.remove('is-hidden');
@@ -51,18 +41,13 @@ function renderMarkup({ hits }) {
 }
 
 function onClickLoadMore() {
-    api.incrementPage();
+    apiPix.incrementPage();
 
-    api.fetchImages()
+    apiPix.fetchImages()
         .then(data => {
             renderMarkup(data)
             smoothScrolling();
         })
-        
-        // .then((images) =>  {
-        //     renderMarkup(images)
-        //     smoothScrolling()
-        // })
 }
 
 function smoothScrolling() {
@@ -72,19 +57,3 @@ function smoothScrolling() {
     }), 500)
     
 }
-
-// function incrementPage() {
-//     pageNumber += 1;
-// }
-
-// function resetPage() {
-//     pageNumber = 1;
-// }
-// function checkLastPage() {
-    //     fro
-    //     frown
-    // }
-
-// function changeInput(value) {
-//     searchQuery = value;
-// }
